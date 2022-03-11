@@ -1,10 +1,10 @@
-#include <SPI.h>
-#include <SD.h>
-#include <Wire.h>
+#include <SPI.h> //biblioteca permite a comunicação pelo protocolo SPI 
+#include <SD.h> //biblioteca permite ler e escrever no cartão SD
+#include <Wire.h> //permite comunicação I2C
 //#include "Adafruit_BMP085.h"
-#include <Arduino.h>
+#include <Arduino.h> //permite a compreensão do VSCode de que vamos programasr um Arduino
 
-#include "Adafruit_BMP280.h"
+#include "Adafruit_BMP280.h" //permite acesso às funções do BMP280
 //Definições de debug
 //#define DEBUG
 //#define DEBUG_TEMP
@@ -16,16 +16,16 @@
 //Definições default
 #define PRESSAO_MAR 1013.25
 
-#define TAMANHO_MEDIA 10
+#define TAMANHO_MEDIA 10 //tamanho do vetor da média móvel
 #define SERVO_ABERTO 40
 #define SERVO_FECHADO 0
 
-#define TEMPO_RELE 1000
+#define TEMPO_RELE 1000 //tempo de atraso entre a abertura do paraquedas principal e do secundário
 #define TEMPO_ATUALIZACAO 50 //em milisegundos
 #define THRESHOLD_DESCIDA 2   //em metros
 #define THRESHOLD_SUBIDA 2  //em metros
 
-//Definições de input
+//Definições de input, define cada pino para cada variável abaixo
 #define PINO_BUZZER 3
 #define PINO_BOTAO 2
 #define PINO_LED_VERD 6
@@ -36,9 +36,9 @@
 #define PINO_SD_CS 4
 
 //definições de erros
-#define ERRO_BMP 'b'
+#define ERRO_BMP 'b' //inicializa uma variável de erro para o BMP 
 
-#define ERRO_SD 's'
+#define ERRO_SD 's' //inicializa uma variável de erro para o leitor SD
 
 //definição de estados
 #define ESTADO_GRAVANDO 'g'
@@ -46,17 +46,17 @@
 #define ESTADO_RECUPERANDO 'r'
 #define ESTADO_ESPERA 'e'
 
-//Variáveis de bibliotecas
-Adafruit_BMP280 bmp;
+//Variáveis de bibliotecas, declarando objetos
+Adafruit_BMP280 bmp; 
 File arquivoLog;
 
 
-char nomeBase[] = "dataLog";
-char nomeConcat[12];
+char nomeBase[] = "dataLog"; //não foi utilizada
+char nomeConcat[12]; //nome do arquivo
 
 //Variáveis de timing
-unsigned long millisAtual   = 0;
-unsigned long atualizaMillis = 0;
+unsigned long millisAtual   = 0; //atualiza o tempo atual 
+unsigned long atualizaMillis = 0; 
 unsigned long millisLed   = 0;
 unsigned long millisGravacao  = 0;
 unsigned long millisRec = 1000000;
@@ -91,7 +91,7 @@ void abreParaquedas() {
   Serial.println("Abrindo o paraquedas!");
 #endif
   digitalWrite(REC_PRINCIPAL, HIGH);
-  millisRec = millis();
+  millisRec = millis(); //armazena o horário que o paraquedas foi aberto
   abriuParaquedas = 1;
 
 }
@@ -353,9 +353,9 @@ void inicializa() {
   pinMode(PINO_LED_AZUL, OUTPUT);
 
   //iniciando recuperação
-  pinMode(REC_PRINCIPAL, OUTPUT);
-  pinMode(REC_SECUNDARIO, OUTPUT);
-  digitalWrite(REC_PRINCIPAL, LOW);
+  pinMode(REC_PRINCIPAL, OUTPUT); //declara o pino do rec principal como output 
+  pinMode(REC_SECUNDARIO, OUTPUT); 
+  digitalWrite(REC_PRINCIPAL, LOW); //inicializa em baixa 
   digitalWrite(REC_SECUNDARIO, LOW);
   erro = 0;
 
@@ -454,8 +454,8 @@ void loop() {
   millisAtual = millis();
 
   if ((millis() - millisRec >= TEMPO_RELE) && abriuParaquedas){
-    digitalWrite(REC_PRINCIPAL, LOW); //COMENTAR LINHA CASO NÃO FOR NECESSÁRIO
-    digitalWrite(REC_SECUNDARIO, HIGH);
+    digitalWrite(REC_PRINCIPAL, LOW); //COMENTAR LINHA CASO NÃO FOR NECESSÁRIO 
+    digitalWrite(REC_SECUNDARIO, HIGH); //aciona o relé secundário
   }
 
   if ((millisAtual - atualizaMillis) >= TEMPO_ATUALIZACAO) {
